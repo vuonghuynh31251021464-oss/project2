@@ -3,63 +3,75 @@ import numpy as np
 from sklearn.linear_model import Perceptron
 from sklearn.preprocessing import StandardScaler
 
-st.set_page_config(page_title="HybridOracle", layout="wide")
+st.set_page_config(page_title="HybridOracle", layout="wide", initial_sidebar_state="expanded")
 
-# ====================== GENZ STYLE CSS ======================
+# ====================== GENZ ULTRA STYLE ======================
 st.markdown("""
 <style>
+    /* Background Gradient */
     body {
-        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        background: linear-gradient(135deg, #1a0033, #0f0c29, #302b63);
         color: white;
+        font-family: 'Segoe UI', sans-serif;
     }
     .main {
-        background: rgba(255,255,255,0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 2rem;
-        border: 1px solid rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(12px);
+        border-radius: 25px;
+        padding: 2.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
     h1 {
-        font-size: 3.2rem;
-        background: linear-gradient(90deg, #ff00cc, #00ffff);
+        font-size: 3.5rem;
+        background: linear-gradient(90deg, #ff00cc, #00ffcc, #ffff00);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: center;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.3rem;
+        text-shadow: 0 0 30px rgba(255, 0, 204, 0.5);
     }
-    h2, h3 {
+    h2 {
         color: #00ffff;
+        text-align: center;
     }
     .stButton>button {
         background: linear-gradient(45deg, #ff00cc, #00ffff);
         color: white;
-        font-size: 1.3rem;
+        font-size: 1.4rem;
         font-weight: bold;
         border-radius: 50px;
-        padding: 0.8rem 2rem;
+        padding: 1rem 3rem;
         border: none;
-        box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-        transition: all 0.3s;
+        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+        transition: all 0.4s;
     }
     .stButton>button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 25px rgba(255, 0, 204, 0.8);
+        transform: scale(1.08);
+        box-shadow: 0 0 40px rgba(255, 0, 204, 0.9);
     }
-    .stSlider label, .stSelectbox label {
-        color: #ffffff;
-        font-weight: 600;
+    .result-box {
+        background: linear-gradient(135deg, rgba(255,0,204,0.2), rgba(0,255,255,0.2));
+        padding: 2rem;
+        border-radius: 20px;
+        border: 2px solid rgba(0,255,255,0.4);
+        text-align: center;
+        margin: 1.5rem 0;
     }
 </style>
 """, unsafe_allow_html=True)
 
 st.title("🔮 HYBRIDORACLE")
-st.markdown("### 🎧 **Music Vibe Detector** ✨")
-st.markdown("**AI đoán gu nhạc GenZ chỉ trong 1 giây** 🔥")
+st.markdown("### 🎧 **Music Vibe Detector 2.0** ✨")
+st.markdown("**AI đoán gu nhạc GenZ siêu chuẩn chỉ trong 1 giây** 🔥")
 
-# Sidebar GenZ Style
-st.sidebar.markdown("## ⚡ GENZ MODE ACTIVATED")
-st.sidebar.markdown("**Music Taste AI**")
-st.sidebar.info("Mô hình Perceptron đang phân tích vibe của bạn...")
+# Sidebar
+with st.sidebar:
+    st.markdown("## ⚡ VIBE CHECK")
+    st.markdown("**Music Taste AI**")
+    st.info("Perceptron Model • 24 training samples • GenZ Edition")
+    st.markdown("---")
+    st.caption("Made with 🔥 for GenZ")
 
 # ----------------------------
 # Utility Function
@@ -71,22 +83,23 @@ def train_perceptron(X, y):
     model.fit(Xs, y)
     return model, scaler
 
-# ========================
-# MUSIC PREFERENCE MODEL
-# ========================
-st.header("🎧 What's Your Music Vibe?")
+# ======================== MAIN LAYOUT ========================
+st.header("🎧 What's Your Music Vibe Today?")
 
-col1, col2 = st.columns(2)
+# Bố cục Input đẹp hơn
+input_col1, input_col2, input_col3 = st.columns([1, 1, 1])
 
-with col1:
-    age = st.slider("🧍 Your Age", 10, 70, 22)
-    hours = st.slider("🎵 Hours listening / day", 0, 12, 4)
+with input_col1:
+    age = st.slider("🧍 Your Age", 13, 35, 22, help="GenZ focus")
 
-with col2:
-    habit = st.selectbox("📱 Main Listening App", ["Spotify", "YouTube", "Radio"])
-    habit_code = {"Radio":0, "Spotify":1, "YouTube":2}[habit]
+with input_col2:
+    hours = st.slider("🎧 Hours listening per day", 0, 15, 4)
 
-# ==================== 24 MẪU DỮ LIỆU ====================
+with input_col3:
+    habit = st.selectbox("📱 Main Platform", ["Spotify", "YouTube", "TikTok", "Radio"])
+    habit_code = {"Radio":0, "Spotify":1, "YouTube":2, "TikTok":3}[habit]
+
+# ==================== DATASET 24 SAMPLES ====================
 X = np.array([
     [20,4,1], [30,2,0], [25,6,2], [40,1,0], [18,8,2], [35,3,1],
     [22,5,2], [28,3,1], [33,7,2], [45,2,0], [19,9,2], [38,4,1],
@@ -96,32 +109,50 @@ X = np.array([
 
 y = np.array([2,1,2,1,2,0, 2,1,2,1,2,0, 2,1,2,1,2,0, 2,1,2,1,2,0])
 
+# Predict Button
 if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True):
     
     model, scaler = train_perceptron(X, y)
-    input_data = np.array([[age, hours, habit_code]])
+    input_data = np.array([[age, hours, habit_code if habit_code < 3 else 2]])  # TikTok → YouTube style
     pred = model.predict(scaler.transform(input_data))[0]
     
     genres = ["🎤 Pop", "🎸 Rock", "🔥 EDM"]
     result = genres[pred]
     
-    st.success(f"**YOUR VIBE IS: {result}**")
+    # Kết quả nổi bật
+    st.markdown(f"""
+    <div class="result-box">
+        <h2>YOUR VIBE IS</h2>
+        <h1 style="font-size: 3.8rem; margin: 0;">{result}</h1>
+    </div>
+    """, unsafe_allow_html=True)
     
     accuracy = model.score(scaler.transform(X), y) * 100
-    st.metric("🔬 Model Accuracy", f"{accuracy:.1f}%")
+    st.metric("Model Accuracy", f"{accuracy:.1f}%", delta="Training Data")
     
-    # Phân tích cá nhân hóa GenZ
-    st.markdown("### 🎯 Your Music Personality:")
-    st.write(f"**Age**: {age} | **Daily Vibe**: {hours}h | **Platform**: {habit}")
+    # Phân tích cá nhân hóa
+    st.markdown("### 🎯 Your Music Personality Report")
+    col_a, col_b = st.columns(2)
+    with col_a:
+        st.write(f"**Age**: {age} tuổi")
+        st.write(f"**Daily Listening**: {hours} giờ")
+    with col_b:
+        st.write(f"**Platform**: {habit}")
     
     if pred == 2:
-        st.info("**EDM Energy Overload!** 🔥\nBạn là party animal, thích nhịp bass mạnh, festival, và sống hết mình!")
+        st.success("**EDM ENERGY!** 🔥\nBạn là tiktoker party, thích bass mạnh, drop điên cuồng và festival!")
     elif pred == 1:
-        st.info("**Rock Rebel Detected** 🎸\nBạn có cá tính mạnh, thích cảm xúc sâu và bùng nổ!")
+        st.warning("**ROCK REBEL** 🎸\nBạn có cá tính, thích cảm xúc mạnh và không theo đám đông.")
     else:
-        st.info("**Pop Princess/Prince** ✨\nBạn chill, dễ thương, thích trend và nhạc dễ nghe!")
+        st.info("**POP GIRL / BOY** ✨\nBạn chill, yêu trend, dễ thương và nghe nhạc để vui vẻ.")
 
     st.balloons()
 
+# Footer
 st.markdown("---")
-st.caption("🔮 HybridOracle • Built for GenZ • Powered by Perceptron AI")
+st.markdown("""
+<div style='text-align: center; color: #00ffff;'>
+    🔮 <strong>HybridOracle</strong> — Music Vibe Detector 2.0<br>
+    Powered by Perceptron • Designed for GenZ
+</div>
+""", unsafe_allow_html=True)
