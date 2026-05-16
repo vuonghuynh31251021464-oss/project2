@@ -2,9 +2,7 @@ import streamlit as st
 import numpy as np
 from sklearn.linear_model import Perceptron
 from sklearn.preprocessing import StandardScaler
-
 st.set_page_config(page_title="HybridOracle", layout="wide", initial_sidebar_state="expanded")
-
 # ====================== ULTRA GENZ NEON STYLE ======================
 st.markdown("""
 <style>
@@ -82,11 +80,9 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-
 st.title("🔮 HYBRIDORACLE")
 st.markdown("### 🎧 **Music Vibe Detector 3.0** ✨")
 st.markdown("**AI đoán gu nhạc GenZ chỉ trong tích tắc** 🔥")
-
 # Sidebar
 with st.sidebar:
     st.markdown("## ⚡ VIBE CHECK ACTIVE")
@@ -94,7 +90,6 @@ with st.sidebar:
     st.info("• Perceptron Model\n• 24 Training Samples\n• GenZ Neon Edition")
     st.markdown("---")
     st.caption("Made with neon & love for GenZ")
-
 # Utility Function
 def train_perceptron(X, y):
     model = Perceptron(max_iter=2000, tol=1e-3, random_state=42)
@@ -102,18 +97,13 @@ def train_perceptron(X, y):
     Xs = scaler.fit_transform(X)
     model.fit(Xs, y)
     return model, scaler
-
 # ======================== INPUT ========================
 st.header("🎧 What's Your Music Vibe Today?")
-
 c1, c2, c3 = st.columns([1, 1, 1])
-
 with c1:
     age = st.slider("🧍 Age", 13, 35, 22)
-
 with c2:
     hours = st.slider("🎧 Hours / Day", 0, 15, 4)
-
 with c3:
     platform_options = {
         "🎵 Spotify": 1,
@@ -126,43 +116,37 @@ with c3:
         options=list(platform_options.keys())
     )
     habit_code = platform_options[habit_display]
-
-# ====================== DATASET ĐÃ CÂN BẰNG ======================
+# Dataset
 X = np.array([
-    # Pop (0) - Nhiều mẫu hơn
-    [22,3,1], [19,2,1], [24,4,1], [21,3,0], [26,2,1], [23,3,1], [20,5,1], [25,2,0],
-    [18,4,1], [27,3,1], [23,4,0],
-    # Rock (1)
-    [28,3,0], [35,4,0], [30,2,2], [32,3,1], [27,5,0], [33,2,0], [29,4,2], [31,3,1],
-    # EDM (2)
-    [20,6,3], [19,8,2], [22,7,3], [21,9,2], [23,5,3], [18,8,3], [24,6,2], [20,7,3]
+    [20,4,1], [30,2,0], [25,6,2], [40,1,0], [18,8,2], [35,3,1],
+    [22,5,2], [28,3,1], [33,7,2], [45,2,0], [19,9,2], [38,4,1],
+    [24,6,2], [29,2,0], [26,5,2], [42,1,1], [21,7,2], [31,3,0],
+    [27,8,2], [36,2,1], [23,6,2], [39,4,0], [20,5,2], [34,3,1]
 ])
-
-y = np.array([0,0,0,0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 2,2,2,2,2,2,2,2])
-
+y = np.array([2,1,2,1,2,0, 2,1,2,1,2,0, 2,1,2,1,2,0, 2,1,2,1,2,0])
 if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True):
-    
+   
     model, scaler = train_perceptron(X, y)
     input_data = np.array([[age, hours, habit_code if habit_code < 3 else 2]])
     pred = model.predict(scaler.transform(input_data))[0]
-    
+   
     genres = ["🎤 Pop", "🎸 Rock", "🔥 EDM"]
     result = genres[pred]
-    
+   
     st.markdown(f"""
     <div class="result-box">
         <h2>YOUR VIBE IS</h2>
         <h1 style="font-size: 4.5rem; margin: 10px 0;">{result}</h1>
     </div>
     """, unsafe_allow_html=True)
-    
+   
     accuracy = model.score(scaler.transform(X), y) * 100
     st.metric("Model Accuracy", f"{accuracy:.1f}%")
-    
-    # ====================== PHÂN TÍCH ======================
+   
+    # ====================== PHÂN TÍCH ĐẸP ======================
     st.markdown("### 🎯 Your Music Personality Analysis")
-    
-    if pred == 2:  # EDM
+   
+    if pred == 2: # EDM
         st.success("**🔥 EDM OVERLOAD** — Bạn là **Party Animal**!")
         st.markdown(f"""
         <div class="analysis-card">
@@ -172,8 +156,8 @@ if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True)
             <strong>⭐ Gợi ý nghệ sĩ:</strong> Alan Walker, The Chainsmokers, Martin Garrix, David Guetta, Skrillex, Illenium, Zedd, Kygo, Avicii
         </div>
         """, unsafe_allow_html=True)
-        
-    elif pred == 1:  # Rock
+       
+    elif pred == 1: # Rock
         st.warning("**🎸 ROCK REBEL** — Bạn là **Emotional Rocker**!")
         st.markdown(f"""
         <div class="analysis-card">
@@ -183,8 +167,8 @@ if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True)
             <strong>⭐ Gợi ý nghệ sĩ:</strong> Imagine Dragons, Linkin Park, Billie Eilish, Coldplay, Twenty One Pilots, The Weeknd, Arctic Monkeys, Foo Fighters
         </div>
         """, unsafe_allow_html=True)
-        
-    else:  # Pop
+       
+    else: # Pop
         st.info("**✨ POP VIBES** — Bạn là **Trendy Pop Lover**!")
         st.markdown(f"""
         <div class="analysis-card">
@@ -194,13 +178,11 @@ if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True)
             <strong>⭐ Gợi ý nghệ sĩ:</strong> Taylor Swift, Olivia Rodrigo, Sabrina Carpenter, Ariana Grande, NewJeans, BLACKPINK, BTS, Charlie Puth, The Kid LAROI
         </div>
         """, unsafe_allow_html=True)
-
     st.balloons()
-
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #00ffff; font-size: 1.1rem;'>
     🔮 <strong>HybridOracle</strong> — Music Vibe Detector 3.0<br>
     <span style='color: #ff00cc;'>Neon Edition • Powered by Perceptron</span>
 </div>
-""", unsafe_allow_html=True)
+""", unsafe_allow_html=True) chỉnh sửa lại theo code này đi
