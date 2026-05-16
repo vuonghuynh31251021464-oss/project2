@@ -29,14 +29,12 @@ st.markdown("""
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: center;
-        margin-bottom: 0.5rem;
     }
     
     h2, h3 {
         color: #d63384;
     }
     
-    /* Input Fields - Bỏ nền xám, tăng độ tương phản */
     .stSlider, .stSelectbox {
         background: white;
         padding: 15px;
@@ -45,12 +43,6 @@ st.markdown("""
         box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
     }
     
-    label {
-        color: #2c2c2c !important;
-        font-weight: 600;
-    }
-    
-    /* Button chuyên nghiệp */
     .stButton>button {
         background: linear-gradient(45deg, #ff69b4, #00ced1, #ba55d3);
         color: white;
@@ -60,7 +52,6 @@ st.markdown("""
         padding: 1.1rem 3.5rem;
         border: none;
         box-shadow: 0 10px 30px rgba(255, 105, 180, 0.4);
-        transition: all 0.4s;
     }
     
     .stButton>button:hover {
@@ -68,15 +59,23 @@ st.markdown("""
         box-shadow: 0 15px 40px rgba(255, 105, 180, 0.6);
     }
     
-    /* Result Box */
+    /* Result Box - Nổi bật hơn */
     .result-box {
         background: linear-gradient(135deg, #fff0f5, #e0f7fa);
-        padding: 2.8rem;
+        padding: 2.5rem;
         border-radius: 25px;
-        border: 3px solid #ff69b4;
+        border: 4px solid #ff69b4;
         text-align: center;
         margin: 2rem 0;
-        box-shadow: 0 10px 35px rgba(255, 182, 193, 0.3);
+        box-shadow: 0 10px 40px rgba(255, 105, 180, 0.35);
+    }
+    
+    .vibe-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: #d63384;
+        text-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+        margin-bottom: 10px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -130,32 +129,46 @@ if st.button("🌸 GUESS MY VIBE NOW", type="primary", use_container_width=True)
     input_data = np.array([[age, hours, habit_code if habit_code < 3 else 2]])
     pred = model.predict(scaler.transform(input_data))[0]
     
-    genres = ["🎤 Pop", "🎸 Rock", "🔥 EDM"]
+    genres = ["Pop", "Rock", "EDM"]
     result = genres[pred]
     
+    # ====================== KẾT QUẢ NỔI BẬT ======================
     st.markdown(f"""
     <div class="result-box">
-        <h2>YOUR VIBE IS</h2>
-        <h1 style="font-size: 4.2rem; margin: 15px 0;">{result}</h1>
+        <p class="vibe-title">YOUR VIBE IS</p>
+        <h1 style="font-size: 4.5rem; margin: 10px 0; color: #d63384;">{result}</h1>
     </div>
     """, unsafe_allow_html=True)
     
     accuracy = model.score(scaler.transform(X), y) * 100
     st.metric("Model Accuracy", f"{accuracy:.1f}%")
     
-    st.markdown("### 🎀 Your Music Personality")
-    col_a, col_b = st.columns(2)
-    with col_a:
-        st.write(f"**Age**: {age} | **Listening**: {hours} giờ/ngày")
-    with col_b:
-        st.write(f"**Platform**: {habit}")
+    # ====================== PHÂN TÍCH CHI TIẾT ======================
+    st.markdown("### 🎀 Your Music Personality Analysis")
     
-    if pred == 2:
-        st.success("**EDM Sweetheart** 🔥💖 Bạn năng động và thích party!")
-    elif pred == 1:
-        st.warning("**Rock Cutie** 🎸🌷 Bạn có cá tính mạnh mẽ!")
-    else:
-        st.info("**Pop Princess / Prince** ✨💕 Bạn chill và yêu trend!")
+    if pred == 2:   # EDM
+        st.success("**🔥 EDM Sweetheart** — Bạn là người năng động, thích sự bùng nổ!")
+        st.write("**Đặc điểm nổi bật:**")
+        st.write("• Thích nhịp bass mạnh và drop cảm xúc")
+        st.write("• Thường nghe nhạc khi tập gym, party hoặc làm việc")
+        st.write("• Năng lượng cao, yêu thích festival và sự kiện âm nhạc")
+        st.write("• Phong cách sống: Hiện đại, táo bạo, không ngại thử thách")
+        
+    elif pred == 1: # Rock
+        st.warning("**🎸 Rock Cutie** — Bạn có cá tính mạnh mẽ và chiều sâu!")
+        st.write("**Đặc điểm nổi bật:**")
+        st.write("• Thích cảm xúc mạnh, guitar riff và lời bài hát sâu sắc")
+        st.write("• Hay nghe nhạc để giải tỏa cảm xúc hoặc truyền cảm hứng")
+        st.write("• Tính cách: Độc lập, chân thành, đôi khi nổi loạn")
+        st.write("• Phong cách: Cool ngầu nhưng vẫn dễ gần")
+        
+    else:           # Pop
+        st.info("**✨ Pop Princess / Prince** — Bạn chill, vui tươi và yêu trend!")
+        st.write("**Đặc điểm nổi bật:**")
+        st.write("• Thích nhạc dễ nghe, bắt tai và theo trend")
+        st.write("• Nghe nhạc để thư giãn, vui vẻ và cập nhật xu hướng")
+        st.write("• Tính cách: Vui tính, hòa đồng, dễ thích nghi")
+        st.write("• Phong cách: Dễ thương, tích cực và luôn tươi mới")
 
     st.balloons()
 
