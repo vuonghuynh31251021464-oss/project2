@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.linear_model import Perceptron
 from sklearn.preprocessing import StandardScaler
 
-st.set_page_config(page_title="HybridOracle", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="AlgoRhythm", layout="wide", initial_sidebar_state="expanded")
 
 # ====================== ULTRA GENZ NEON STYLE ======================
 st.markdown("""
@@ -83,7 +83,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🔮 HYBRIDORACLE")
+st.title("🎧 AlgoRhythm 🎵")
 st.markdown("### 🎧 **Music Vibe Detector 3.0** ✨")
 st.markdown("**AI đoán gu nhạc GenZ chỉ trong tích tắc** 🔥")
 
