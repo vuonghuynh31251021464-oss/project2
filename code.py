@@ -5,7 +5,7 @@ from skfuzzy import control as ctrl
 from sklearn.linear_model import Perceptron
 from sklearn.preprocessing import StandardScaler
 
-st.set_page_config(page_title="HybridOracle", layout="wide")
+st.set_page_config(page_title="HybridOracle - Patient Diagnosis", layout="wide")
 
 st.markdown("""
 <style>
@@ -25,8 +25,8 @@ h1, h2, h3 {
     background-color: #1E3A8A;
     border-radius: 8px;
     border: none;
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
+    font-size: 1.1rem;
+    padding: 0.6rem 1.2rem;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -36,8 +36,12 @@ st.markdown("### 🧩 Hybrid Intelligent Prediction System  \n"
             "*Kết hợp Perceptron Neural Network & Fuzzy Logic*")
 
 menu = st.sidebar.radio("Select Prediction Task:",
-                        ["Air Pollution", "Soil Classification", "Music Preference",
-                         "Stress Level", "Traffic Forecast"])
+                        ["Patient Diagnosis",
+                         "Air Pollution", 
+                         "Soil Classification", 
+                         "Music Preference",
+                         "Stress Level", 
+                         "Traffic Forecast"])
 
 # ----------------------------
 # Utility Function for Perceptron
@@ -50,21 +54,78 @@ def train_perceptron(X, y):
     return model, scaler
 
 # ========================
+# MODEL 0 - PATIENT DIAGNOSIS (Theo Assignment)
+# ========================
+if menu == "Patient Diagnosis":
+    st.header("🩺 Patient Diagnosis System")
+    st.markdown("**Nhập thông tin bệnh nhân để dự đoán nguy cơ bệnh tim mạch**")
+
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        age = st.number_input("Tuổi (Age)", min_value=20, max_value=90, value=45)
+        gender = st.selectbox("Giới tính", ["Nam", "Nữ"])
+        gender_code = 1 if gender == "Nam" else 0
+        blood_pressure = st.slider("Huyết áp (mmHg)", 90, 180, 120)
+        cholesterol = st.slider("Cholesterol (mg/dL)", 120, 320, 200)
+    
+    with col2:
+        smoking = st.selectbox("Hút thuốc", ["Không", "Có"])
+        smoking_code = 1 if smoking == "Có" else 0
+        diabetes = st.selectbox("Tiểu đường", ["Không", "Có"])
+        diabetes_code = 1 if diabetes == "Có" else 0
+        exercise = st.slider("Tập thể dục (giờ/tuần)", 0, 10, 3)
+        family_history = st.selectbox("Tiền sử gia đình bị tim", ["Không", "Có"])
+        family_code = 1 if family_history == "Có" else 0
+
+    if st.button("🔍 Predict Diagnosis", type="primary", use_container_width=True):
+        
+        # Bộ dữ liệu mẫu để train Perceptron
+        X = np.array([
+            [45, 1, 130, 220, 1, 0, 4, 1],
+            [50, 0, 140, 250, 0, 1, 2, 0],
+            [35, 1, 110, 180, 0, 0, 5, 0],
+            [60, 1, 150, 260, 1, 1, 1, 1],
+            [40, 0, 125, 210, 0, 0, 6, 0],
+            [55, 1, 135, 240, 1, 0, 3, 1],
+            [30, 0, 115, 190, 0, 0, 7, 0],
+            [65, 1, 160, 280, 1, 1, 1, 1],
+            [42, 0, 128, 205, 0, 0, 5, 0],
+        ])
+        
+        y = np.array([1, 1, 0, 1, 0, 1, 0, 1, 0])  # 1 = High Risk, 0 = Low Risk
+
+        model, scaler = train_perceptron(X, y)
+        
+        input_data = np.array([[age, gender_code, blood_pressure, cholesterol,
+                              smoking_code, diabetes_code, exercise, family_code]])
+        
+        pred = model.predict(scaler.transform(input_data))[0]
+        
+        st.markdown("### Kết quả chẩn đoán:")
+        if pred == 1:
+            st.error("**HIGH RISK** - Nguy cơ cao mắc bệnh tim mạch")
+            st.warning("Khuyến nghị: Nên gặp bác sĩ sớm và thay đổi lối sống")
+        else:
+            st.success("**LOW RISK** - Nguy cơ thấp")
+            st.info("Tiếp tục duy trì lối sống lành mạnh")
+        
+        st.metric("Mức độ nguy cơ", "Cao" if pred == 1 else "Thấp")
+
+# ========================
 # MODEL 1 - Air Pollution
 # ========================
-if menu == "Air Pollution":
+elif menu == "Air Pollution":
     st.header("🌫️ Air Pollution Classification")
     pm25 = st.slider("PM2.5 Fine Dust (µg/m³)", 0, 300, 50)
     co2 = st.slider("CO₂ Concentration (ppm)", 300, 2000, 600)
     humidity = st.slider("Humidity (%)", 0, 100, 40)
     
-    # Fuzzy Variables
     pm25_in = ctrl.Antecedent(np.arange(0, 301, 1), 'pm25')
     co2_in = ctrl.Antecedent(np.arange(300, 2001, 1), 'co2')
     hum_in = ctrl.Antecedent(np.arange(0, 101, 1), 'humidity')
     quality_out = ctrl.Consequent(np.arange(0, 3, 1), 'quality')
 
-    # Membership functions
     pm25_in['low'] = fuzz.trapmf(pm25_in.universe, [0,0,50,100])
     pm25_in['med'] = fuzz.trapmf(pm25_in.universe, [80,100,150,200])
     pm25_in['high'] = fuzz.trapmf(pm25_in.universe, [180,250,300,300])
@@ -80,7 +141,6 @@ if menu == "Air Pollution":
     quality_out['average'] = fuzz.trimf(quality_out.universe, [0,1,2])
     quality_out['hazard'] = fuzz.trimf(quality_out.universe, [1,2,2])
 
-    # Rules
     rules = [
         ctrl.Rule(pm25_in['low'] & co2_in['low'], quality_out['good']),
         ctrl.Rule(pm25_in['med'] | hum_in['med'], quality_out['average']),
@@ -93,7 +153,6 @@ if menu == "Air Pollution":
     sim.input['co2'] = co2
     sim.input['humidity'] = humidity
     sim.compute()
-    
     score = sim.output['quality']
     result = ["Good", "Average", "Hazardous"][int(round(score))]
     
@@ -105,7 +164,6 @@ if menu == "Air Pollution":
 # ========================
 elif menu == "Soil Classification":
     st.header("🌱 Soil Classification")
-    # (Giữ nguyên code phần này của bạn)
     ph = st.slider("Soil pH", 3.0, 9.0, 6.5)
     nitrogen = st.slider("Nitrogen content (%)", 0.0, 1.0, 0.3)
     humidity = st.slider("Humidity (%)", 0, 100, 40)
@@ -130,7 +188,6 @@ elif menu == "Soil Classification":
 # ========================
 elif menu == "Music Preference":
     st.header("🎧 Identify Your Favorite Music")
-    # (Giữ nguyên code phần này)
     age = st.slider("Age", 10, 70, 25)
     hours = st.slider("Hours listening to music/day", 0, 10, 3)
     habit = st.selectbox("Listening Habits", ["Radio", "Spotify", "YouTube"])
@@ -153,12 +210,10 @@ elif menu == "Music Preference":
 # ========================
 elif menu == "Stress Level":
     st.header("😰 Stress Level Classification")
-    # (Giữ nguyên phần code Stress Level của bạn)
     work_hours = st.slider("Hours of work/day", 0, 16, 8)
     sleep_hours = st.slider("Hours of sleep/day", 0, 12, 6)
     coffee = st.slider("Cups of coffee/day", 0, 10, 2)
     
-    # Fuzzy code phần Stress Level...
     stress_in = ctrl.Antecedent(np.arange(0, 17, 1), 'work')
     sleep_in = ctrl.Antecedent(np.arange(0, 13, 1), 'sleep')
     coffee_in = ctrl.Antecedent(np.arange(0, 11, 1), 'coffee')
@@ -185,7 +240,6 @@ elif menu == "Stress Level":
     sim.input['sleep'] = sleep_hours
     sim.input['coffee'] = coffee
     sim.compute()
-    
     score = sim.output['stress']
     result = "Normal" if score < 0.5 else "Malnutrition/Stress"
     
@@ -197,13 +251,11 @@ elif menu == "Stress Level":
 # ========================
 elif menu == "Traffic Forecast":
     st.header("🚗 Traffic Forecast")
-    # (Giữ nguyên code phần Traffic của bạn)
     hour = st.slider("Hour of Day (0–23)", 0, 23, 8)
     vehicles = st.slider("Vehicles per minute", 0, 100, 30)
     weather = st.selectbox("Weather", ["Sunny","Rainy"])
     weather_code = {"Sunny":0, "Rainy":1}[weather]
 
-    # Fuzzy code...
     traffic_in = ctrl.Antecedent(np.arange(0, 101, 1), 'vehicles')
     hour_in = ctrl.Antecedent(np.arange(0, 24, 1), 'hour')
     traffic_out = ctrl.Consequent(np.arange(0,3,1), 'traffic')
@@ -232,11 +284,10 @@ elif menu == "Traffic Forecast":
     sim.input['vehicles'] = vehicles
     sim.input['hour'] = hour
     sim.compute()
-    
     score = sim.output['traffic']
     result = ["Clear", "Medium", "Congested"][int(round(score))]
     
     st.success(f"🚦 Predicted Traffic: **{result}**")
     st.metric("Fuzzy output", round(score,2))
 
-st.caption("🔮 HybridOracle • Developed with ❤️ using Streamlit, Scikit-learn, and Fuzzy Logic")
+st.caption("🔮 HybridOracle • Patient Diagnosis using Perceptron | Assignment Project")
