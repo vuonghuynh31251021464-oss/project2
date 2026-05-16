@@ -3,39 +3,63 @@ import numpy as np
 from sklearn.linear_model import Perceptron
 from sklearn.preprocessing import StandardScaler
 
-st.set_page_config(page_title="HybridOracle - Music Preference", layout="wide")
+st.set_page_config(page_title="HybridOracle", layout="wide")
 
+# ====================== GENZ STYLE CSS ======================
 st.markdown("""
 <style>
-    body { background-color: #f7f9fc; }
-    .main { background-color: white; padding: 2rem; border-radius: 10px; }
-    h1, h2, h3 { color: #1E3A8A; }
+    body {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        color: white;
+    }
+    .main {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    h1 {
+        font-size: 3.2rem;
+        background: linear-gradient(90deg, #ff00cc, #00ffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    h2, h3 {
+        color: #00ffff;
+    }
     .stButton>button {
-        color: white; 
-        background-color: #1E3A8A;
-        border-radius: 8px; 
-        border: none; 
-        font-size: 1.1rem; 
-        padding: 0.6rem 1.2rem;
+        background: linear-gradient(45deg, #ff00cc, #00ffff);
+        color: white;
+        font-size: 1.3rem;
+        font-weight: bold;
+        border-radius: 50px;
+        padding: 0.8rem 2rem;
+        border: none;
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        transition: all 0.3s;
+    }
+    .stButton>button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(255, 0, 204, 0.8);
+    }
+    .stSlider label, .stSelectbox label {
+        color: #ffffff;
+        font-weight: 600;
     }
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🔮 HybridOracle")
-st.markdown("### 🎧 Music Preference Prediction System")
-st.markdown("**Perceptron Machine Learning Model**")
+st.title("🔮 HYBRIDORACLE")
+st.markdown("### 🎧 **Music Vibe Detector** ✨")
+st.markdown("**AI đoán gu nhạc GenZ chỉ trong 1 giây** 🔥")
 
-# ====================== SIDEBAR ======================
-st.sidebar.header("ℹ️ Model Information")
-st.sidebar.markdown("""
-**Model:** Perceptron  
-**Algorithm:** Single Layer Neural Network  
-**Library:** scikit-learn  
-**Dataset:** 24 mẫu dữ liệu giả lập  
-**Features:** Age, Listening Hours, Listening Habit  
-**Target:** Music Genre (Pop, Rock, EDM)
-""")
-st.sidebar.info("Mô hình học từ dữ liệu để dự đoán thể loại nhạc yêu thích của bạn.")
+# Sidebar GenZ Style
+st.sidebar.markdown("## ⚡ GENZ MODE ACTIVATED")
+st.sidebar.markdown("**Music Taste AI**")
+st.sidebar.info("Mô hình Perceptron đang phân tích vibe của bạn...")
 
 # ----------------------------
 # Utility Function
@@ -48,27 +72,19 @@ def train_perceptron(X, y):
     return model, scaler
 
 # ========================
-# MAIN MUSIC PREFERENCE MODEL
+# MUSIC PREFERENCE MODEL
 # ========================
-st.header("🎧 Identify Your Favorite Music")
+st.header("🎧 What's Your Music Vibe?")
 
-st.markdown("""
-Hệ thống sẽ dự đoán **thể loại nhạc yêu thích** của bạn dựa trên:
-- Tuổi tác  
-- Thời gian nghe nhạc mỗi ngày  
-- Thói quen nghe nhạc
-""")
-
-# Input Fields
 col1, col2 = st.columns(2)
 
 with col1:
-    age = st.slider("Your Age", 10, 70, 25)
-    hours = st.slider("Hours listening to music per day", 0, 12, 3)
+    age = st.slider("🧍 Your Age", 10, 70, 22)
+    hours = st.slider("🎵 Hours listening / day", 0, 12, 4)
 
 with col2:
-    habit = st.selectbox("Main Listening Habit", ["Radio", "Spotify", "YouTube"])
-    habit_code = {"Radio": 0, "Spotify": 1, "YouTube": 2}[habit]
+    habit = st.selectbox("📱 Main Listening App", ["Spotify", "YouTube", "Radio"])
+    habit_code = {"Radio":0, "Spotify":1, "YouTube":2}[habit]
 
 # ==================== 24 MẪU DỮ LIỆU ====================
 X = np.array([
@@ -80,39 +96,32 @@ X = np.array([
 
 y = np.array([2,1,2,1,2,0, 2,1,2,1,2,0, 2,1,2,1,2,0, 2,1,2,1,2,0])
 
-# Predict Button
-if st.button("🔍 Predict My Favorite Music", type="primary", use_container_width=True):
+if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True):
     
     model, scaler = train_perceptron(X, y)
-    
     input_data = np.array([[age, hours, habit_code]])
     pred = model.predict(scaler.transform(input_data))[0]
     
-    genres = ["Pop", "Rock", "EDM"]
+    genres = ["🎤 Pop", "🎸 Rock", "🔥 EDM"]
     result = genres[pred]
     
-    # Kết quả chính
-    st.success(f"🎵 **Your predicted favorite music genre: {result}**")
+    st.success(f"**YOUR VIBE IS: {result}**")
     
-    # Độ chính xác
     accuracy = model.score(scaler.transform(X), y) * 100
-    st.metric(label="Model Training Accuracy", value=f"{accuracy:.2f}%")
+    st.metric("🔬 Model Accuracy", f"{accuracy:.1f}%")
     
-    # Phân tích cá nhân hóa
-    st.markdown("### 📊 Phân tích cá nhân hóa")
-    st.write(f"**• Tuổi:** {age} tuổi")
-    st.write(f"**• Thời gian nghe:** {hours} giờ/ngày")
-    st.write(f"**• Thói quen:** {habit}")
+    # Phân tích cá nhân hóa GenZ
+    st.markdown("### 🎯 Your Music Personality:")
+    st.write(f"**Age**: {age} | **Daily Vibe**: {hours}h | **Platform**: {habit}")
     
-    if result == "EDM":
-        st.info("🔥 Bạn có xu hướng thích nhạc điện tử sôi động, nhịp nhanh. Thường là người năng động, yêu thích party và festival.")
-    elif result == "Rock":
-        st.info("🎸 Bạn nghiêng về Rock - thể loại mạnh mẽ, giàu cảm xúc và cá tính. Thường là người sâu lắng và đam mê.")
+    if pred == 2:
+        st.info("**EDM Energy Overload!** 🔥\nBạn là party animal, thích nhịp bass mạnh, festival, và sống hết mình!")
+    elif pred == 1:
+        st.info("**Rock Rebel Detected** 🎸\nBạn có cá tính mạnh, thích cảm xúc sâu và bùng nổ!")
     else:
-        st.info("🎤 Bạn thích Pop - thể loại dễ nghe, bắt tai, vui tươi và phổ biến rộng rãi.")
-    
-    st.caption("Lưu ý: Đây là mô hình minh họa sử dụng dữ liệu giả lập để demo Perceptron.")
+        st.info("**Pop Princess/Prince** ✨\nBạn chill, dễ thương, thích trend và nhạc dễ nghe!")
+
+    st.balloons()
 
 st.markdown("---")
-st.caption("🔮 HybridOracle • Music Preference Prediction using Perceptron")
-st.caption("Dataset: 24 samples | Algorithm: Perceptron | Accuracy calculated on training data")
+st.caption("🔮 HybridOracle • Built for GenZ • Powered by Perceptron AI")
