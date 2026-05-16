@@ -108,8 +108,19 @@ with c2:
     hours = st.slider("🎧 Hours / Day", 0, 15, 4)
 
 with c3:
-    habit = st.selectbox("📱 Main Platform", ["Spotify", "YouTube", "TikTok", "Radio"])
-    habit_code = {"Radio":0, "Spotify":1, "YouTube":2, "TikTok":3}[habit]
+    # === THÊM ICON CHO CÁC LỰA CHỌN ===
+    platform_options = {
+        "🎵 Spotify": 1,
+        "▶️ YouTube": 2,
+        "♬ TikTok": 3,
+        "📻 Radio": 0
+    }
+    
+    habit_display = st.selectbox(
+        "📱 Main Platform", 
+        options=list(platform_options.keys())
+    )
+    habit_code = platform_options[habit_display]
 
 # Dataset
 X = np.array([
