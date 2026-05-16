@@ -199,7 +199,7 @@ if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True)
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #00ffff; font-size: 1.1rem;'>
-    🔮 <strong>🎧 AlgoRhythm 🎵</strong> — Music Vibe Detector 3.0<br>
+      <strong>🎧 AlgoRhythm 🎵</strong> — Music Vibe Detector 3.0<br>
     <span style='color: #ff00cc;'>Neon Edition • Powered by Perceptron</span>
 </div>
 """, unsafe_allow_html=True)
