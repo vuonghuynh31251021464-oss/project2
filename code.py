@@ -5,7 +5,7 @@ from sklearn.preprocessing import StandardScaler
 
 st.set_page_config(page_title="HybridOracle", layout="wide", initial_sidebar_state="expanded")
 
-# ====================== PASTEL PROFESSIONAL STYLE ======================
+# ====================== PASTEL BEAUTIFUL STYLE ======================
 st.markdown("""
 <style>
     body {
@@ -15,26 +15,25 @@ st.markdown("""
     }
     
     .main {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
+        background: rgba(255, 255, 255, 0.93);
+        backdrop-filter: blur(18px);
         border-radius: 30px;
         padding: 3rem;
-        border: 2px solid rgba(255, 105, 180, 0.3);
+        border: 2px solid rgba(255, 105, 180, 0.35);
         box-shadow: 0 15px 50px rgba(255, 182, 193, 0.25);
     }
     
     h1 {
-        font-size: 3.8rem;
+        font-size: 3.7rem;
         background: linear-gradient(90deg, #ff69b4, #00ced1, #ba55d3);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: center;
     }
     
-    h2, h3 {
-        color: #d63384;
-    }
+    h2, h3 { color: #d63384; }
     
+    /* Input rõ ràng */
     .stSlider, .stSelectbox {
         background: white;
         padding: 15px;
@@ -43,13 +42,14 @@ st.markdown("""
         box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
     }
     
+    /* Button đẹp */
     .stButton>button {
         background: linear-gradient(45deg, #ff69b4, #00ced1, #ba55d3);
         color: white;
         font-size: 1.5rem;
         font-weight: 700;
         border-radius: 50px;
-        padding: 1.1rem 3.5rem;
+        padding: 1rem 3.5rem;
         border: none;
         box-shadow: 0 10px 30px rgba(255, 105, 180, 0.4);
     }
@@ -59,23 +59,22 @@ st.markdown("""
         box-shadow: 0 15px 40px rgba(255, 105, 180, 0.6);
     }
     
-    /* Result Box - Nổi bật hơn */
+    /* Result Box - Nổi bật & Đẹp */
     .result-box {
         background: linear-gradient(135deg, #fff0f5, #e0f7fa);
-        padding: 2.5rem;
-        border-radius: 25px;
+        padding: 2.8rem;
+        border-radius: 28px;
         border: 4px solid #ff69b4;
         text-align: center;
         margin: 2rem 0;
-        box-shadow: 0 10px 40px rgba(255, 105, 180, 0.35);
+        box-shadow: 0 15px 45px rgba(255, 105, 180, 0.3);
     }
     
     .vibe-title {
-        font-size: 2.8rem;
+        font-size: 2.6rem;
         font-weight: 700;
         color: #d63384;
-        text-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
-        margin-bottom: 10px;
+        margin-bottom: 8px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -87,10 +86,10 @@ st.markdown("**AI đoán gu nhạc pastel cho GenZ** ✨")
 # Sidebar
 with st.sidebar:
     st.markdown("## 🌷 Pastel Vibe AI")
-    st.info("Perceptron Model • 24 Samples • Pastel Professional Edition")
+    st.info("Perceptron Model • 24 Samples")
     st.caption("Soft • Sweet • Accurate 💕")
 
-# Utility Function
+# Utility
 def train_perceptron(X, y):
     model = Perceptron(max_iter=2000, tol=1e-3, random_state=42)
     scaler = StandardScaler()
@@ -98,7 +97,7 @@ def train_perceptron(X, y):
     model.fit(Xs, y)
     return model, scaler
 
-# ======================== INPUT ========================
+# Input
 st.header("🎧 What's Your Music Vibe Today?")
 
 c1, c2, c3 = st.columns([1, 1, 1])
@@ -132,7 +131,7 @@ if st.button("🌸 GUESS MY VIBE NOW", type="primary", use_container_width=True)
     genres = ["Pop", "Rock", "EDM"]
     result = genres[pred]
     
-    # ====================== KẾT QUẢ NỔI BẬT ======================
+    # Kết quả nổi bật
     st.markdown(f"""
     <div class="result-box">
         <p class="vibe-title">YOUR VIBE IS</p>
@@ -143,32 +142,26 @@ if st.button("🌸 GUESS MY VIBE NOW", type="primary", use_container_width=True)
     accuracy = model.score(scaler.transform(X), y) * 100
     st.metric("Model Accuracy", f"{accuracy:.1f}%")
     
-    # ====================== PHÂN TÍCH CHI TIẾT ======================
+    # Phân tích chi tiết
     st.markdown("### 🎀 Your Music Personality Analysis")
     
-    if pred == 2:   # EDM
-        st.success("**🔥 EDM Sweetheart** — Bạn là người năng động, thích sự bùng nổ!")
-        st.write("**Đặc điểm nổi bật:**")
-        st.write("• Thích nhịp bass mạnh và drop cảm xúc")
-        st.write("• Thường nghe nhạc khi tập gym, party hoặc làm việc")
-        st.write("• Năng lượng cao, yêu thích festival và sự kiện âm nhạc")
-        st.write("• Phong cách sống: Hiện đại, táo bạo, không ngại thử thách")
+    if pred == 2:      # EDM
+        st.success("**🔥 EDM Sweetheart** — Năng lượng bùng nổ!")
+        st.write("• Thích bass mạnh, drop cảm xúc và nhịp nhanh")
+        st.write("• Thường nghe khi tập gym, party hoặc cần năng lượng")
+        st.write("• Tính cách: Năng động, thích thử thách, yêu festival")
         
-    elif pred == 1: # Rock
-        st.warning("**🎸 Rock Cutie** — Bạn có cá tính mạnh mẽ và chiều sâu!")
-        st.write("**Đặc điểm nổi bật:**")
-        st.write("• Thích cảm xúc mạnh, guitar riff và lời bài hát sâu sắc")
-        st.write("• Hay nghe nhạc để giải tỏa cảm xúc hoặc truyền cảm hứng")
+    elif pred == 1:    # Rock
+        st.warning("**🎸 Rock Cutie** — Cá tính mạnh mẽ!")
+        st.write("• Thích guitar riff và lời bài hát sâu lắng")
+        st.write("• Nghe nhạc để giải tỏa hoặc truyền cảm hứng")
         st.write("• Tính cách: Độc lập, chân thành, đôi khi nổi loạn")
-        st.write("• Phong cách: Cool ngầu nhưng vẫn dễ gần")
         
-    else:           # Pop
-        st.info("**✨ Pop Princess / Prince** — Bạn chill, vui tươi và yêu trend!")
-        st.write("**Đặc điểm nổi bật:**")
+    else:              # Pop
+        st.info("**✨ Pop Princess / Prince** — Chill & Vui tươi!")
         st.write("• Thích nhạc dễ nghe, bắt tai và theo trend")
-        st.write("• Nghe nhạc để thư giãn, vui vẻ và cập nhật xu hướng")
-        st.write("• Tính cách: Vui tính, hòa đồng, dễ thích nghi")
-        st.write("• Phong cách: Dễ thương, tích cực và luôn tươi mới")
+        st.write("• Nghe nhạc để thư giãn và cập nhật xu hướng")
+        st.write("• Tính cách: Vui vẻ, hòa đồng, dễ thương")
 
     st.balloons()
 
@@ -176,6 +169,6 @@ st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #d63384; font-size: 1.1rem;'>
     🔮 <strong>HybridOracle</strong> — Pastel Music Vibe Detector<br>
-    Soft Pastel Professional Edition • Made for GenZ 💕
+    Soft Pastel Beautiful Edition • Made for GenZ 💕
 </div>
 """, unsafe_allow_html=True)
