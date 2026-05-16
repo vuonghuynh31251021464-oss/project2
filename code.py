@@ -108,7 +108,6 @@ with c2:
     hours = st.slider("🎧 Hours / Day", 0, 15, 4)
 
 with c3:
-    # === THÊM ICON CHO CÁC LỰA CHỌN ===
     platform_options = {
         "🎵 Spotify": 1,
         "▶️ YouTube": 2,
@@ -117,7 +116,7 @@ with c3:
     }
     
     habit_display = st.selectbox(
-        "📱 Main Platform", 
+        "📱 Main Platform",
         options=list(platform_options.keys())
     )
     habit_code = platform_options[habit_display]
@@ -129,7 +128,6 @@ X = np.array([
     [24,6,2], [29,2,0], [26,5,2], [42,1,1], [21,7,2], [31,3,0],
     [27,8,2], [36,2,1], [23,6,2], [39,4,0], [20,5,2], [34,3,1]
 ])
-
 y = np.array([2,1,2,1,2,0, 2,1,2,1,2,0, 2,1,2,1,2,0, 2,1,2,1,2,0])
 
 if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True):
@@ -141,7 +139,6 @@ if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True)
     genres = ["🎤 Pop", "🎸 Rock", "🔥 EDM"]
     result = genres[pred]
     
-    # ====================== KẾT QUẢ ======================
     st.markdown(f"""
     <div class="result-box">
         <h2>YOUR VIBE IS</h2>
@@ -155,26 +152,26 @@ if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True)
     # ====================== PHÂN TÍCH SÂU ======================
     st.markdown("### 🎯 Your Music Personality Analysis")
     
-    if pred == 2:        # EDM
+    if pred == 2:  # EDM
         st.success("**🔥 EDM OVERLOAD** — Bạn là **Party Animal**!")
-        st.write("**Platform ưa thích:** TikTok / YouTube")
+        st.write(f"**Platform ưa thích:** {habit_display}")
         st.write("**Đặc điểm:** Thích bass mạnh, drop điên cuồng, festival, nhịp nhanh")
         st.write("**Tính cách:** Năng động, thích thử thách, sống hết mình với âm nhạc")
-        st.write("**Gợi ý:** Alan Walker, The Chainsmokers, Martin Garrix")
+        st.write("**Gợi ý nghệ sĩ:** Alan Walker, The Chainsmokers, Martin Garrix, David Guetta, Skrillex, Illenium, Zedd, Kygo")
         
-    elif pred == 1:      # Rock
+    elif pred == 1:  # Rock
         st.warning("**🎸 ROCK REBEL** — Bạn là **Emotional Rocker**!")
-        st.write("**Platform ưa thích:** Spotify / YouTube")
+        st.write(f"**Platform ưa thích:** {habit_display}")
         st.write("**Đặc điểm:** Thích guitar riff mạnh, lời bài hát sâu sắc, cảm xúc dâng trào")
         st.write("**Tính cách:** Cá tính mạnh, độc lập, đôi khi nổi loạn")
-        st.write("**Gợi ý:** Imagine Dragons, Linkin Park, Billie Eilish (Rock version)")
+        st.write("**Gợi ý nghệ sĩ:** Imagine Dragons, Linkin Park, Billie Eilish, Coldplay, Twenty One Pilots, The Weeknd, Arctic Monkeys")
         
-    else:                # Pop
+    else:  # Pop
         st.info("**✨ POP VIBES** — Bạn là **Trendy Pop Lover**!")
-        st.write("**Platform ưa thích:** Spotify / TikTok")
+        st.write(f"**Platform ưa thích:** {habit_display}")
         st.write("**Đặc điểm:** Thích nhạc dễ nghe, bắt tai, theo trend, giai điệu vui tươi")
         st.write("**Tính cách:** Vui vẻ, hòa đồng, yêu sự tươi mới")
-        st.write("**Gợi ý:** Taylor Swift, Olivia Rodrigo, NewJeans, Sabrina Carpenter")
+        st.write("**Gợi ý nghệ sĩ:** Taylor Swift, Olivia Rodrigo, NewJeans, Sabrina Carpenter, Ariana Grande, BTS, BLACKPINK, The Kid LAROI, Charlie Puth")
 
     st.balloons()
 
