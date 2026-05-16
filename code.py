@@ -5,18 +5,15 @@ from sklearn.preprocessing import StandardScaler
 
 st.set_page_config(page_title="HybridOracle", layout="wide", initial_sidebar_state="expanded")
 
-# ====================== ULTRA GENZ BACKGROUND ======================
+# ====================== ULTRA GENZ NEON STYLE ======================
 st.markdown("""
 <style>
-    /* Background chính siêu đẹp */
     body {
         background: linear-gradient(135deg, #0a0022, #1a0033, #2a1a4d);
         background-attachment: fixed;
         color: white;
         font-family: 'Segoe UI', sans-serif;
     }
-    
-    /* Overlay gradient + glow */
     .main {
         background: rgba(20, 10, 50, 0.75);
         backdrop-filter: blur(16px);
@@ -27,7 +24,6 @@ st.markdown("""
                     inset 0 0 40px rgba(0, 255, 255, 0.1);
         margin-top: 1rem;
     }
-    
     h1 {
         font-size: 3.8rem;
         background: linear-gradient(90deg, #ff00cc, #00ffff, #ffff00, #ff00cc);
@@ -37,17 +33,14 @@ st.markdown("""
         text-shadow: 0 0 40px rgba(255, 0, 204, 0.6);
         animation: glow 3s ease-in-out infinite alternate;
     }
-    
     @keyframes glow {
         from { text-shadow: 0 0 20px #ff00cc; }
         to { text-shadow: 0 0 40px #00ffff; }
     }
-    
     h2, h3 {
         color: #00ffff;
         text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
     }
-    
     .stButton>button {
         background: linear-gradient(45deg, #ff00cc, #00ffff, #ff00cc);
         background-size: 200% 200%;
@@ -61,26 +54,24 @@ st.markdown("""
         transition: all 0.4s;
         animation: pulse 2s infinite;
     }
-    
     .stButton>button:hover {
         transform: scale(1.1) translateY(-3px);
         box-shadow: 0 0 50px rgba(255, 0, 204, 0.9);
     }
-    
     .result-box {
         background: linear-gradient(135deg, rgba(255,0,204,0.25), rgba(0,255,255,0.25));
-        padding: 2.5rem;
+        padding: 2.8rem;
         border-radius: 25px;
-        border: 2px solid rgba(0,255,255,0.5);
+        border: 2px solid rgba(0,255,255,0.6);
         text-align: center;
         margin: 2rem 0;
-        box-shadow: 0 0 40px rgba(0, 255, 255, 0.3);
+        box-shadow: 0 0 40px rgba(0, 255, 255, 0.4);
     }
-    
     .stSlider, .stSelectbox {
-        background: rgba(255,255,255,0.05);
-        padding: 10px;
+        background: rgba(255,255,255,0.08);
+        padding: 12px;
         border-radius: 15px;
+        border: 1px solid rgba(0,255,255,0.3);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -97,9 +88,7 @@ with st.sidebar:
     st.markdown("---")
     st.caption("Made with neon & love for GenZ")
 
-# ----------------------------
 # Utility Function
-# ----------------------------
 def train_perceptron(X, y):
     model = Perceptron(max_iter=2000, tol=1e-3, random_state=42)
     scaler = StandardScaler()
@@ -107,10 +96,9 @@ def train_perceptron(X, y):
     model.fit(Xs, y)
     return model, scaler
 
-# ======================== MAIN CONTENT ========================
+# ======================== INPUT ========================
 st.header("🎧 What's Your Music Vibe Today?")
 
-# Input Layout
 c1, c2, c3 = st.columns([1, 1, 1])
 
 with c1:
@@ -142,29 +130,40 @@ if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True)
     genres = ["🎤 Pop", "🎸 Rock", "🔥 EDM"]
     result = genres[pred]
     
+    # ====================== KẾT QUẢ ======================
     st.markdown(f"""
     <div class="result-box">
         <h2>YOUR VIBE IS</h2>
-        <h1 style="font-size: 4.2rem; margin: 10px 0;">{result}</h1>
+        <h1 style="font-size: 4.5rem; margin: 10px 0;">{result}</h1>
     </div>
     """, unsafe_allow_html=True)
     
     accuracy = model.score(scaler.transform(X), y) * 100
     st.metric("Model Accuracy", f"{accuracy:.1f}%")
     
-    st.markdown("### 🎯 Your Music Personality")
-    col_a, col_b = st.columns(2)
-    with col_a:
-        st.write(f"**Age**: {age} | **Listening**: {hours} giờ/ngày")
-    with col_b:
-        st.write(f"**Platform**: {habit}")
+    # ====================== PHÂN TÍCH SÂU ======================
+    st.markdown("### 🎯 Your Music Personality Analysis")
     
-    if pred == 2:
-        st.success("**EDM OVERLOAD!** 🔥\nBạn sống cho những đêm rave, bass mạnh và drop điên cuồng!")
-    elif pred == 1:
-        st.warning("**ROCK REBEL** 🎸\nBạn có cá tính mạnh, thích cảm xúc và không ngại nổi loạn!")
-    else:
-        st.info("**POP VIBES** ✨\nBạn chill, yêu trend, dễ thương và luôn cập nhật hit mới!")
+    if pred == 2:        # EDM
+        st.success("**🔥 EDM OVERLOAD** — Bạn là **Party Animal**!")
+        st.write("**Platform ưa thích:** TikTok / YouTube")
+        st.write("**Đặc điểm:** Thích bass mạnh, drop điên cuồng, festival, nhịp nhanh")
+        st.write("**Tính cách:** Năng động, thích thử thách, sống hết mình với âm nhạc")
+        st.write("**Gợi ý:** Alan Walker, The Chainsmokers, Martin Garrix")
+        
+    elif pred == 1:      # Rock
+        st.warning("**🎸 ROCK REBEL** — Bạn là **Emotional Rocker**!")
+        st.write("**Platform ưa thích:** Spotify / YouTube")
+        st.write("**Đặc điểm:** Thích guitar riff mạnh, lời bài hát sâu sắc, cảm xúc dâng trào")
+        st.write("**Tính cách:** Cá tính mạnh, độc lập, đôi khi nổi loạn")
+        st.write("**Gợi ý:** Imagine Dragons, Linkin Park, Billie Eilish (Rock version)")
+        
+    else:                # Pop
+        st.info("**✨ POP VIBES** — Bạn là **Trendy Pop Lover**!")
+        st.write("**Platform ưa thích:** Spotify / TikTok")
+        st.write("**Đặc điểm:** Thích nhạc dễ nghe, bắt tai, theo trend, giai điệu vui tươi")
+        st.write("**Tính cách:** Vui vẻ, hòa đồng, yêu sự tươi mới")
+        st.write("**Gợi ý:** Taylor Swift, Olivia Rodrigo, NewJeans, Sabrina Carpenter")
 
     st.balloons()
 
