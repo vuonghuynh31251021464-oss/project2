@@ -22,7 +22,6 @@ st.markdown("""
         border: 1px solid rgba(0, 255, 255, 0.3);
         box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6),
                     inset 0 0 40px rgba(0, 255, 255, 0.1);
-        margin-top: 1rem;
     }
     h1 {
         font-size: 3.8rem;
@@ -37,41 +36,14 @@ st.markdown("""
         from { text-shadow: 0 0 20px #ff00cc; }
         to { text-shadow: 0 0 40px #00ffff; }
     }
-    h2, h3 {
-        color: #00ffff;
-        text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-    }
-    .stButton>button {
-        background: linear-gradient(45deg, #ff00cc, #00ffff, #ff00cc);
-        background-size: 200% 200%;
-        color: white;
-        font-size: 1.5rem;
-        font-weight: 700;
-        border-radius: 50px;
-        padding: 1rem 3rem;
-        border: none;
-        box-shadow: 0 0 30px rgba(0, 255, 255, 0.7);
-        transition: all 0.4s;
-        animation: pulse 2s infinite;
-    }
-    .stButton>button:hover {
-        transform: scale(1.1) translateY(-3px);
-        box-shadow: 0 0 50px rgba(255, 0, 204, 0.9);
-    }
-    .result-box {
-        background: linear-gradient(135deg, rgba(255,0,204,0.25), rgba(0,255,255,0.25));
-        padding: 2.8rem;
-        border-radius: 25px;
-        border: 2px solid rgba(0,255,255,0.6);
-        text-align: center;
-        margin: 2rem 0;
-        box-shadow: 0 0 40px rgba(0, 255, 255, 0.4);
-    }
-    .stSlider, .stSelectbox {
+    h2, h3 { color: #00ffff; }
+    
+    .analysis-card {
         background: rgba(255,255,255,0.08);
-        padding: 12px;
-        border-radius: 15px;
+        padding: 1.8rem;
+        border-radius: 20px;
         border: 1px solid rgba(0,255,255,0.3);
+        margin-bottom: 1.2rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -85,7 +57,6 @@ with st.sidebar:
     st.markdown("## ⚡ VIBE CHECK ACTIVE")
     st.markdown("**Music Taste AI v3.0**")
     st.info("• Perceptron Model\n• 24 Training Samples\n• GenZ Neon Edition")
-    st.markdown("---")
     st.caption("Made with neon & love for GenZ")
 
 # Utility Function
@@ -96,17 +67,14 @@ def train_perceptron(X, y):
     model.fit(Xs, y)
     return model, scaler
 
-# ======================== INPUT ========================
+# Input
 st.header("🎧 What's Your Music Vibe Today?")
 
 c1, c2, c3 = st.columns([1, 1, 1])
-
 with c1:
     age = st.slider("🧍 Age", 13, 35, 22)
-
 with c2:
     hours = st.slider("🎧 Hours / Day", 0, 15, 4)
-
 with c3:
     platform_options = {
         "🎵 Spotify": 1,
@@ -114,21 +82,15 @@ with c3:
         "♬ TikTok": 3,
         "📻 Radio": 0
     }
-    
-    habit_display = st.selectbox(
-        "📱 Main Platform",
-        options=list(platform_options.keys())
-    )
+    habit_display = st.selectbox("📱 Main Platform", options=list(platform_options.keys()))
     habit_code = platform_options[habit_display]
 
 # Dataset
-X = np.array([
-    [20,4,1], [30,2,0], [25,6,2], [40,1,0], [18,8,2], [35,3,1],
-    [22,5,2], [28,3,1], [33,7,2], [45,2,0], [19,9,2], [38,4,1],
-    [24,6,2], [29,2,0], [26,5,2], [42,1,1], [21,7,2], [31,3,0],
-    [27,8,2], [36,2,1], [23,6,2], [39,4,0], [20,5,2], [34,3,1]
-])
-y = np.array([2,1,2,1,2,0, 2,1,2,1,2,0, 2,1,2,1,2,0, 2,1,2,1,2,0])
+X = np.array([[20,4,1],[30,2,0],[25,6,2],[40,1,0],[18,8,2],[35,3,1],
+              [22,5,2],[28,3,1],[33,7,2],[45,2,0],[19,9,2],[38,4,1],
+              [24,6,2],[29,2,0],[26,5,2],[42,1,1],[21,7,2],[31,3,0],
+              [27,8,2],[36,2,1],[23,6,2],[39,4,0],[20,5,2],[34,3,1]])
+y = np.array([2,1,2,1,2,0,2,1,2,1,2,0,2,1,2,1,2,0,2,1,2,1,2,0])
 
 if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True):
     
@@ -146,32 +108,43 @@ if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True)
     </div>
     """, unsafe_allow_html=True)
     
-    accuracy = model.score(scaler.transform(X), y) * 100
-    st.metric("Model Accuracy", f"{accuracy:.1f}%")
+    st.metric("Model Accuracy", f"{model.score(scaler.transform(X), y)*100:.1f}%")
     
-    # ====================== PHÂN TÍCH SÂU ======================
+    # ====================== PHÂN TÍCH ĐẸP HƠN ======================
     st.markdown("### 🎯 Your Music Personality Analysis")
     
-    if pred == 2:  # EDM
+    if pred == 2:        # EDM
         st.success("**🔥 EDM OVERLOAD** — Bạn là **Party Animal**!")
-        st.write(f"**Platform ưa thích:** {habit_display}")
-        st.write("**Đặc điểm:** Thích bass mạnh, drop điên cuồng, festival, nhịp nhanh")
-        st.write("**Tính cách:** Năng động, thích thử thách, sống hết mình với âm nhạc")
-        st.write("**Gợi ý nghệ sĩ:** Alan Walker, The Chainsmokers, Martin Garrix, David Guetta, Skrillex, Illenium, Zedd, Kygo")
+        st.markdown(f"""
+        <div class="analysis-card">
+            <strong>📱 Platform ưa thích:</strong> {habit_display}<br><br>
+            <strong>🎵 Đặc điểm:</strong> Thích bass mạnh, drop điên cuồng, festival, nhịp nhanh<br><br>
+            <strong>🧠 Tính cách:</strong> Năng động, thích thử thách, sống hết mình với âm nhạc<br><br>
+            <strong>⭐ Gợi ý nghệ sĩ:</strong> Alan Walker, The Chainsmokers, Martin Garrix, David Guetta, Skrillex, Illenium, Zedd, Kygo, Avicii
+        </div>
+        """, unsafe_allow_html=True)
         
-    elif pred == 1:  # Rock
+    elif pred == 1:      # Rock
         st.warning("**🎸 ROCK REBEL** — Bạn là **Emotional Rocker**!")
-        st.write(f"**Platform ưa thích:** {habit_display}")
-        st.write("**Đặc điểm:** Thích guitar riff mạnh, lời bài hát sâu sắc, cảm xúc dâng trào")
-        st.write("**Tính cách:** Cá tính mạnh, độc lập, đôi khi nổi loạn")
-        st.write("**Gợi ý nghệ sĩ:** Imagine Dragons, Linkin Park, Billie Eilish, Coldplay, Twenty One Pilots, The Weeknd, Arctic Monkeys")
+        st.markdown(f"""
+        <div class="analysis-card">
+            <strong>📱 Platform ưa thích:</strong> {habit_display}<br><br>
+            <strong>🎵 Đặc điểm:</strong> Thích guitar riff mạnh, lời bài hát sâu sắc, cảm xúc dâng trào<br><br>
+            <strong>🧠 Tính cách:</strong> Cá tính mạnh, độc lập, đôi khi nổi loạn<br><br>
+            <strong>⭐ Gợi ý nghệ sĩ:</strong> Imagine Dragons, Linkin Park, Billie Eilish, Coldplay, Twenty One Pilots, The Weeknd, Arctic Monkeys, Foo Fighters
+        </div>
+        """, unsafe_allow_html=True)
         
-    else:  # Pop
+    else:                # Pop
         st.info("**✨ POP VIBES** — Bạn là **Trendy Pop Lover**!")
-        st.write(f"**Platform ưa thích:** {habit_display}")
-        st.write("**Đặc điểm:** Thích nhạc dễ nghe, bắt tai, theo trend, giai điệu vui tươi")
-        st.write("**Tính cách:** Vui vẻ, hòa đồng, yêu sự tươi mới")
-        st.write("**Gợi ý nghệ sĩ:** Taylor Swift, Olivia Rodrigo, NewJeans, Sabrina Carpenter, Ariana Grande, BTS, BLACKPINK, The Kid LAROI, Charlie Puth")
+        st.markdown(f"""
+        <div class="analysis-card">
+            <strong>📱 Platform ưa thích:</strong> {habit_display}<br><br>
+            <strong>🎵 Đặc điểm:</strong> Thích nhạc dễ nghe, bắt tai, theo trend, giai điệu vui tươi<br><br>
+            <strong>🧠 Tính cách:</strong> Vui vẻ, hòa đồng, yêu sự tươi mới<br><br>
+            <strong>⭐ Gợi ý nghệ sĩ:</strong> Taylor Swift, Olivia Rodrigo, Sabrina Carpenter, Ariana Grande, NewJeans, BLACKPINK, BTS, Charlie Puth, The Kid LAROI
+        </div>
+        """, unsafe_allow_html=True)
 
     st.balloons()
 
