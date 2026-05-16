@@ -185,4 +185,4 @@ st.markdown("""
     🔮 <strong>HybridOracle</strong> — Music Vibe Detector 3.0<br>
     <span style='color: #ff00cc;'>Neon Edition • Powered by Perceptron</span>
 </div>
-""", unsafe_allow_html=True) chỉnh sửa lại theo code này đi
+""", unsafe_allow_html=True) 
