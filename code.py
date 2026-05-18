@@ -109,12 +109,8 @@ data = data.rename(columns={
 })
 
 # ===== MAP TEXT -> NUMBER =====
-platform_map = {
-    "Radio": 0,
-    "Spotify": 1,
-    "YouTube": 2,
-    "TikTok": 3
-}
+# ONE-HOT ENCODE PLATFORM
+data = pd.get_dummies(data, columns=["platform"])
 
 genre_map = {
     "Pop": 0,
@@ -122,7 +118,7 @@ genre_map = {
     "EDM": 2
 }
 
-data["platform"] = data["platform"].map(platform_map)
+
 data["genre"] = data["genre"].map(genre_map)
 
 # ===== CLEAN DATA =====
@@ -133,7 +129,7 @@ data = data.dropna()
 
 # DEBUG
 # ================= MODEL =================
-X = data[["age","hours","platform"]].values
+X = data.drop("genre", axis=1).values
 y = data["genre"].values
 
 scaler = StandardScaler()
@@ -167,8 +163,30 @@ with c3:
 if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True):
 
     # ===== PREDICT =====
-    input_data = np.array([[age, hours, habit_code]])
-    pred = model.predict(scaler.transform(input_data))[0]
+    input_dict = {
+        "age": age,
+        "hours": hours,
+        "platform_Radio": 0,
+        "platform_Spotify": 0,
+        "platform_YouTube": 0,
+        "platform_TikTok": 0
+    }
+
+    if habit_display == "🎵 Spotify":
+        input_dict["platform_Spotify"] = 1
+    elif habit_display == "▶️ YouTube":
+        input_dict["platform_YouTube"] = 1
+    elif habit_display == "♬ TikTok":
+        input_dict["platform_TikTok"] = 1
+    else:
+        input_dict["platform_Radio"] = 1
+
+    input_df = pd.DataFrame([input_dict])
+
+    # đảm bảo đúng thứ tự cột
+    input_df = input_df[data.drop("genre", axis=1).columns]
+
+    pred = model.predict(scaler.transform(input_df))[0]
 
     genres = ["🎤 Pop", "🎸 Rock", "🔥 EDM"]
     result = genres[pred]
@@ -274,9 +292,9 @@ if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True)
     # Histogram
     st.subheader("📊 Distribution")
 
-    fig1 = data.hist(figsize=(8,6))
-    st.pyplot(plt.gcf())
-
+    fig1 = plt.figure()
+    data.hist(figsize=(8,6))
+    st.pyplot(fig1)
     # Heatmap
     st.subheader("🔥 Correlation Heatmap")
     fig2 = plt.figure()
