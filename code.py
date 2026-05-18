@@ -98,13 +98,42 @@ with st.sidebar:
 # ================= LOAD DATA =================
 data = pd.read_csv("algorhythm_music_vibe_data.csv")
 
-# FIX LỖI CỘT CSV
-data.columns = data.columns.str.strip().str.lower()
+# ===== RENAME COLUMNS =====
+data.columns = data.columns.str.strip()
 
-# Nếu sai format thì force rename
-if len(data.columns) >= 4:
-    data.columns = ["age","hours","platform","genre"]
+data = data.rename(columns={
+    "Age": "age",
+    "Hours_Per_Day": "hours",
+    "Main_Platform": "platform",
+    "Genre": "genre"
+})
 
+# ===== MAP TEXT -> NUMBER =====
+platform_map = {
+    "Radio": 0,
+    "Spotify": 1,
+    "YouTube": 2,
+    "TikTok": 3
+}
+
+genre_map = {
+    "Pop": 0,
+    "Rock": 1,
+    "EDM": 2
+}
+
+data["platform"] = data["platform"].map(platform_map)
+data["genre"] = data["genre"].map(genre_map)
+
+# ===== CLEAN DATA =====
+data["age"] = pd.to_numeric(data["age"], errors="coerce")
+data["hours"] = pd.to_numeric(data["hours"], errors="coerce")
+
+data = data.dropna()
+
+# DEBUG
+st.write("✅ Cleaned Data:", data.head())
+st.write("Dtypes:", data.dtypes)
 # ================= MODEL =================
 X = data[["age","hours","platform"]].values
 y = data["genre"].values
