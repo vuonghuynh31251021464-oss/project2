@@ -209,9 +209,9 @@ if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True)
 
     # Histogram
     st.subheader("📊 Distribution")
-    fig1 = plt.figure()
-    data.hist(figsize=(8,6))
-    st.pyplot(fig1)
+
+    fig1 = data.hist(figsize=(8,6))
+    st.pyplot(plt.gcf())
 
     # Heatmap
     st.subheader("🔥 Correlation Heatmap")
