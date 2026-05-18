@@ -184,14 +184,77 @@ if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True)
     st.metric("Model Accuracy", f"{accuracy:.1f}%")
 
     # ===== ANALYSIS CARD =====
+    # ====================== PHÂN TÍCH ======================
+
     st.markdown("### 🎯 Your Music Personality Analysis")
 
-    if pred == 2:
+    
+
+    if pred == 2: # EDM
+
         st.success("**🔥 EDM OVERLOAD** — Bạn là **Party Animal**!")
-    elif pred == 1:
+
+        st.markdown(f"""
+
+        <div class="analysis-card">
+
+            <strong>📱 Platform ưa thích:</strong> {habit_display}<br><br>
+
+            <strong>🎵 Đặc điểm:</strong> Thích bass mạnh, drop điên cuồng, festival, nhịp nhanh<br><br>
+
+            <strong>🧠 Tính cách:</strong> Năng động, thích thử thách, sống hết mình với âm nhạc<br><br>
+
+            <strong>⭐ Gợi ý nghệ sĩ:</strong> Alan Walker, The Chainsmokers, Martin Garrix, David Guetta, Skrillex, Illenium, Zedd, Kygo, Avicii
+
+        </div>
+
+        """, unsafe_allow_html=True)
+
+        
+
+    elif pred == 1: # Rock
+
         st.warning("**🎸 ROCK REBEL** — Bạn là **Emotional Rocker**!")
-    else:
+
+        st.markdown(f"""
+
+        <div class="analysis-card">
+
+            <strong>📱 Platform ưa thích:</strong> {habit_display}<br><br>
+
+            <strong>🎵 Đặc điểm:</strong> Thích guitar riff mạnh, lời bài hát sâu sắc, cảm xúc dâng trào<br><br>
+
+            <strong>🧠 Tính cách:</strong> Cá tính mạnh, độc lập, đôi khi nổi loạn<br><br>
+
+            <strong>⭐ Gợi ý nghệ sĩ:</strong> Imagine Dragons, Linkin Park, Billie Eilish, Coldplay, Twenty One Pilots, The Weeknd, Arctic Monkeys, Foo Fighters
+
+        </div>
+
+        """, unsafe_allow_html=True)
+
+        
+
+    else: # Pop
+
         st.info("**✨ POP VIBES** — Bạn là **Trendy Pop Lover**!")
+
+        st.markdown(f"""
+
+        <div class="analysis-card">
+
+            <strong>📱 Platform ưa thích:</strong> {habit_display}<br><br>
+
+            <strong>🎵 Đặc điểm:</strong> Thích nhạc dễ nghe, bắt tai, theo trend, giai điệu vui tươi<br><br>
+
+            <strong>🧠 Tính cách:</strong> Vui vẻ, hòa đồng, yêu sự tươi mới<br><br>
+
+            <strong>⭐ Gợi ý nghệ sĩ:</strong> Taylor Swift, Olivia Rodrigo, Sabrina Carpenter, Ariana Grande, NewJeans, BLACKPINK, BTS, Charlie Puth, The Kid LAROI
+
+        </div>
+
+        """, unsafe_allow_html=True)
+
+
 
     st.balloons()
 
