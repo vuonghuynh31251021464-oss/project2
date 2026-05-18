@@ -133,7 +133,6 @@ data = data.dropna()
 
 # DEBUG
 st.write("✅ Cleaned Data:", data.head())
-st.write("Dtypes:", data.dtypes)
 # ================= MODEL =================
 X = data[["age","hours","platform"]].values
 y = data["genre"].values
