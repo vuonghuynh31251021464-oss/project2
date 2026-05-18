@@ -279,7 +279,6 @@ if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True)
     # ====================== DATA ANALYSIS ======================
     st.markdown("---")
     st.write("✅ Cleaned Data:", data.head())
-    st.write("platform:🎵 Spotify: 1,▶️ YouTube: 2,♬ TikTok: 3,📻 Radio: 0")
     st.write("(genre:0-POP--1-ROCK--2-EDM)")
     st.markdown("## 📊 Phân tích dữ liệu khảo sát thực tế")
 
