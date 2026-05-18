@@ -168,6 +168,7 @@ with c3:
 # ================= PREDICT =================
 if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True):
 
+    # ===== PREDICT =====
     input_data = np.array([[age, hours, habit_code]])
     pred = model.predict(scaler.transform(input_data))[0]
 
@@ -184,7 +185,7 @@ if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True)
     accuracy = model.score(Xs, y) * 100
     st.metric("Model Accuracy", f"{accuracy:.1f}%")
 
-    # ===== ANALYSIS CARD GIỮ NGUYÊN =====
+    # ===== ANALYSIS CARD =====
     st.markdown("### 🎯 Your Music Personality Analysis")
 
     if pred == 2:
@@ -196,62 +197,63 @@ if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True)
 
     st.balloons()
 
-# ====================== DATA ANALYSIS ======================
-st.markdown("---")
-st.markdown("## 📊 Data Analysis Dashboard")
+    # ====================== DATA ANALYSIS ======================
+    st.markdown("---")
+    st.markdown("## 📊 Phân tích dữ liệu khảo sát thực tế")
 
-st.subheader("👀 Dataset Preview")
-st.dataframe(data.head())
+    st.subheader("👀 Dataset Preview")
+    st.dataframe(data.head())
 
-st.subheader("📈 Statistics")
-st.write(data.describe())
+    st.subheader("📈 Statistics")
+    st.write(data.describe())
 
-# Histogram
-st.subheader("📊 Distribution")
-fig1 = plt.figure()
-data.hist(figsize=(8,6))
-st.pyplot(fig1)
+    # Histogram
+    st.subheader("📊 Distribution")
+    fig1 = plt.figure()
+    data.hist(figsize=(8,6))
+    st.pyplot(fig1)
 
-# Heatmap
-st.subheader("🔥 Correlation Heatmap")
-fig2 = plt.figure()
-sns.heatmap(data.corr(), annot=True, cmap="coolwarm")
-st.pyplot(fig2)
+    # Heatmap
+    st.subheader("🔥 Correlation Heatmap")
+    fig2 = plt.figure()
+    sns.heatmap(data.corr(), annot=True, cmap="coolwarm")
+    st.pyplot(fig2)
 
-# Train/Test
-st.subheader("🤖 Model Evaluation")
+    # ===== MODEL EVALUATION =====
+    st.subheader("🤖 Model Evaluation")
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
 
-scaler2 = StandardScaler()
-X_train = scaler2.fit_transform(X_train)
-X_test = scaler2.transform(X_test)
+    scaler2 = StandardScaler()
+    X_train = scaler2.fit_transform(X_train)
+    X_test = scaler2.transform(X_test)
 
-model2 = Perceptron(max_iter=2000)
-model2.fit(X_train, y_train)
+    model2 = Perceptron(max_iter=2000)
+    model2.fit(X_train, y_train)
 
-train_acc = model2.score(X_train, y_train)*100
-test_acc = model2.score(X_test, y_test)*100
+    train_acc = model2.score(X_train, y_train)*100
+    test_acc = model2.score(X_test, y_test)*100
 
-c1, c2 = st.columns(2)
-c1.metric("Train Accuracy", f"{train_acc:.2f}%")
-c2.metric("Test Accuracy", f"{test_acc:.2f}%")
+    c1, c2 = st.columns(2)
+    c1.metric("Train Accuracy", f"{train_acc:.2f}%")
+    c2.metric("Test Accuracy", f"{test_acc:.2f}%")
 
-# Confusion Matrix
-st.subheader("🎯 Confusion Matrix")
+    # Confusion Matrix
+    st.subheader("🎯 Confusion Matrix")
 
-cm = confusion_matrix(y_test, model2.predict(X_test))
+    cm = confusion_matrix(y_test, model2.predict(X_test))
 
-fig3 = plt.figure()
-sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
-st.pyplot(fig3)
+    fig3 = plt.figure()
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+    st.pyplot(fig3)
 
-# Footer
-st.markdown("---")
-st.markdown("""
-<div style='text-align: center; color: #00ffff;'>
-🎧 AlgoRhythm 🎵 — Music Vibe Detector 3.0
-</div>
-""", unsafe_allow_html=True)
+    # Footer
+    st.markdown("---")
+    st.markdown("""
+    <div style='text-align: center; color: #00ffff;'>
+    🎧 AlgoRhythm 🎵 — Music Vibe Detector 3.0
+    </div>
+    """, unsafe_allow_html=True)
+
