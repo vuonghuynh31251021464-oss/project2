@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
 from sklearn.linear_model import Perceptron
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
@@ -11,7 +10,6 @@ from sklearn.metrics import confusion_matrix
 
 st.set_page_config(page_title="AlgoRhythm", layout="wide", initial_sidebar_state="expanded")
 
-# ====================== ULTRA GENZ NEON STYLE ======================
 st.markdown("""
 <style>
     body {
@@ -87,7 +85,6 @@ st.title("🎧 AlgoRhythm 🎵")
 st.markdown("### 🎧 **Music Vibe Detector 3.0** ✨")
 st.markdown("**AI đoán gu nhạc GenZ chỉ trong tích tắc** 🔥")
 
-# Sidebar
 with st.sidebar:
     st.markdown("## ⚡ VIBE CHECK ACTIVE")
     st.markdown("**Music Taste AI v3.0**")
@@ -95,12 +92,9 @@ with st.sidebar:
     st.markdown("---")
     st.caption("Made with neon & love for GenZ")
 
-# ================= LOAD DATA =================
 data = pd.read_csv("algorhythm_music_vibe_data.csv")
 
-# ===== RENAME COLUMNS =====
 data.columns = data.columns.str.strip()
-
 data = data.rename(columns={
     "Age": "age",
     "Hours_Per_Day": "hours",
@@ -108,8 +102,6 @@ data = data.rename(columns={
     "Genre": "genre"
 })
 
-# ===== MAP TEXT -> NUMBER =====
-# ONE-HOT ENCODE PLATFORM
 data = pd.get_dummies(data, columns=["platform"])
 
 genre_map = {
@@ -117,18 +109,12 @@ genre_map = {
     "Rock": 1,
     "EDM": 2
 }
-
-
 data["genre"] = data["genre"].map(genre_map)
 
-# ===== CLEAN DATA =====
 data["age"] = pd.to_numeric(data["age"], errors="coerce")
 data["hours"] = pd.to_numeric(data["hours"], errors="coerce")
-
 data = data.dropna()
 
-# DEBUG
-# ================= MODEL =================
 X = data.drop("genre", axis=1).values
 y = data["genre"].values
 
@@ -138,17 +124,12 @@ Xs = scaler.fit_transform(X)
 model = Perceptron(max_iter=2000, tol=1e-3, random_state=42)
 model.fit(Xs, y)
 
-# ================= INPUT =================
 st.header("🎧 What's Your Music Vibe Today?")
-
 c1, c2, c3 = st.columns([1,1,1])
-
 with c1:
     age = st.slider("🧍 Age", 13, 35, 22)
-
 with c2:
     hours = st.slider("🎧 Hours / Day", 0, 15, 4)
-
 with c3:
     platform_options = {
         "🎵 Spotify": 1,
@@ -159,10 +140,7 @@ with c3:
     habit_display = st.selectbox("📱 Main Platform", list(platform_options.keys()))
     habit_code = platform_options[habit_display]
 
-# ================= PREDICT =================
 if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True):
-
-    # ===== PREDICT =====
     input_dict = {
         "age": age,
         "hours": hours,
@@ -171,7 +149,6 @@ if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True)
         "platform_YouTube": 0,
         "platform_TikTok": 0
     }
-
     if habit_display == "🎵 Spotify":
         input_dict["platform_Spotify"] = 1
     elif habit_display == "▶️ YouTube":
@@ -180,161 +157,104 @@ if st.button("🔥 GUESS MY VIBE NOW", type="primary", use_container_width=True)
         input_dict["platform_TikTok"] = 1
     else:
         input_dict["platform_Radio"] = 1
-
+    
     input_df = pd.DataFrame([input_dict])
-
-    # đảm bảo đúng thứ tự cột
     input_df = input_df[data.drop("genre", axis=1).columns]
-
+    
     pred = model.predict(scaler.transform(input_df))[0]
-
     genres = ["🎤 Pop", "🎸 Rock", "🔥 EDM"]
     result = genres[pred]
-
+    
     st.markdown(f"""
     <div class="result-box">
         <h2>YOUR VIBE IS</h2>
         <h1 style="font-size: 4.5rem;">{result}</h1>
     </div>
     """, unsafe_allow_html=True)
-
+    
     accuracy = model.score(Xs, y) * 100
     st.metric("Model Accuracy", f"{accuracy:.1f}%")
-
-    # ===== ANALYSIS CARD =====
-    # ====================== PHÂN TÍCH ======================
-
-    st.markdown("### 🎯 Your Music Personality Analysis")
-
     
-
-    if pred == 2: # EDM
-
+    st.markdown("### 🎯 Your Music Personality Analysis")
+   
+    if pred == 2:
         st.success("**🔥 EDM OVERLOAD** — Bạn là **Party Animal**!")
-
         st.markdown(f"""
-
         <div class="analysis-card">
-
         <strong>📱 Platform ưa thích:</strong> {habit_display}<br><br>
-
         <strong>🎵 Đặc điểm:</strong> Thích bass mạnh, drop điên cuồng, festival, nhịp nhanh<br><br>
-
         <strong>🧠 Tính cách:</strong> Năng động, thích thử thách, sống hết mình với âm nhạc<br><br>
-
         <strong>⭐ Gợi ý nghệ sĩ:</strong> Alan Walker, The Chainsmokers, Martin Garrix, David Guetta, Skrillex, Illenium, Zedd, Kygo, Avicii
-
         </div>
-
         """, unsafe_allow_html=True)
-
-        
-
-    elif pred == 1: # Rock
-
+       
+    elif pred == 1:
         st.warning("**🎸 ROCK REBEL** — Bạn là **Emotional Rocker**!")
-
         st.markdown(f"""
-
         <div class="analysis-card">
-
         <strong>📱 Platform ưa thích:</strong> {habit_display}<br><br>
-
         <strong>🎵 Đặc điểm:</strong> Thích guitar riff mạnh, lời bài hát sâu sắc, cảm xúc dâng trào<br><br>
-
         <strong>🧠 Tính cách:</strong> Cá tính mạnh, độc lập, đôi khi nổi loạn<br><br>
-
         <strong>⭐ Gợi ý nghệ sĩ:</strong> Imagine Dragons, Linkin Park, Billie Eilish, Coldplay, Twenty One Pilots, The Weeknd, Arctic Monkeys, Foo Fighters
-
         </div>
-
         """, unsafe_allow_html=True)
-
-        
-
-    else: # Pop
-
+       
+    else:
         st.info("**✨ POP VIBES** — Bạn là **Trendy Pop Lover**!")
-
         st.markdown(f"""
-
         <div class="analysis-card">
-
         <strong>📱 Platform ưa thích:</strong> {habit_display}<br><br>
-
         <strong>🎵 Đặc điểm:</strong> Thích nhạc dễ nghe, bắt tai, theo trend, giai điệu vui tươi<br><br>
-
         <strong>🧠 Tính cách:</strong> Vui vẻ, hòa đồng, yêu sự tươi mới<br><br>
-
         <strong>⭐ Gợi ý nghệ sĩ:</strong> Taylor Swift, Olivia Rodrigo, Sabrina Carpenter, Ariana Grande, NewJeans, BLACKPINK, BTS, Charlie Puth, The Kid LAROI
-
         </div>
-
         """, unsafe_allow_html=True)
-
-
-
+    
     st.balloons()
-
-    # ====================== DATA ANALYSIS ======================
+    
     st.markdown("---")
     st.write("✅ Cleaned Data(Sample):", data.head())
     st.write("(genre:0-POP--1-ROCK--2-EDM)")
     st.markdown("## 📊 Phân tích dữ liệu khảo sát thực tế")
-
     st.subheader("👀 Dataset Preview")
     st.dataframe(data.head())
-
     st.subheader("📈 Statistics")
     st.write(data.describe())
-
-    # Histogram
+    
     st.subheader("📊 Distribution")
-
     fig1 = plt.figure()
     data.hist(figsize=(8,6))
     st.pyplot(fig1)
-    # Heatmap
+    
     st.subheader("🔥 Correlation Heatmap")
     fig2 = plt.figure()
     sns.heatmap(data.corr(), annot=True, cmap="coolwarm")
     st.pyplot(fig2)
-
-    # ===== MODEL EVALUATION =====
+    
     st.subheader("🤖 Model Evaluation")
-
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
-
     scaler2 = StandardScaler()
     X_train = scaler2.fit_transform(X_train)
     X_test = scaler2.transform(X_test)
-
     model2 = Perceptron(max_iter=2000)
     model2.fit(X_train, y_train)
-
     train_acc = model2.score(X_train, y_train)*100
     test_acc = model2.score(X_test, y_test)*100
-
     c1, c2 = st.columns(2)
     c1.metric("Train Accuracy", f"{train_acc:.2f}%")
     c2.metric("Test Accuracy", f"{test_acc:.2f}%")
-
-    # Confusion Matrix
+    
     st.subheader("🎯 Confusion Matrix")
-
     cm = confusion_matrix(y_test, model2.predict(X_test))
-
     fig3 = plt.figure()
     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
     st.pyplot(fig3)
-
-    # Footer
+    
     st.markdown("---")
     st.markdown("""
     <div style='text-align: center; color: #00ffff;'>
     🎧 AlgoRhythm 🎵 — Music Vibe Detector 3.0
     </div>
     """, unsafe_allow_html=True)
-
